@@ -1,0 +1,23 @@
+wioski:
+  PSRS:
+    nazwa: Pustynna Socjalistyczna Republika Survivalowa
+    przywodca: guciokonda
+    czlonkowie: [Chormon, dadi57]
+    lokacja:
+      world: world
+      x: 100
+      y: 0
+      z: 100
+    zalozono: 2013-05-50
+    do: 2013-11-05 11:20
+  BSRS:
+    nazwa: Bagienna Socjalistyczna Republika Survivalowa
+    przywodca: Povered
+    czlonkowie: [piko169, Monualen]
+    lokacja:
+      world: world
+      x: 0
+      y: 100
+      z: 0
+    zalozono: 2013-05-50
+    do: 2013-12-01 12:10

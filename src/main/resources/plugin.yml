@@ -1,0 +1,36 @@
+name: WioskiMCSV
+description: Autorski plugin do zarzadzania wioskami na serwerze MCSV.pl
+main: pl.chormon.WioskiMCSV.WioskiMCSV
+author: Chormon
+version: "${project.version}"
+depend: [PermissionsEx, WorldGuard]
+commands:
+  wioska:
+    description: Wszystkie komendy pluginu WioskiMCSV
+    permission: <plugin name>.wioska
+    usage: |
+      Uzycie:
+      /<command> - Wyswietla pomoc
+      /<command> stworz <akronim> <nazwa wioski> - Tworzy nowa wioske <nazwa wioski>. <akronim> bedzie przedrostkiem w nazwie czlonkow wioski.
+      /<command> dodaj <nazwa gracza> - Dodaje gracza <nazwa gracza> do wioski.
+      /<command> usun <nazwa gracza> - Usuwa gracza <nazwa gracza> z wioski.
+      /<command> rozwiaz - Rozwiazuje wioske.
+      /<command> przedluz - Przedluza czas wioski.
+      /<command> info - Pokazuje informacje o wiosce, w ktorej sie jest.
+      /<command> info <akronim> - Pokazuje informacje o wiosce <akronim>.
+      /<command> czlonkowie - Wyswietla liste czlonkow wioski, w ktorej sie jest.
+      /<command> czlonkowie <akronim> - Wyswietla liste czlonkow wioski <akronim>.
+      /<command> tak <akronim> - Zaakceptowanie zaproszenia do wioski.
+      /<command> nie <akronim> - Odrzucenie zaproszenia do wioski.
+  wioski:
+    description: Wyswietla liste wiosek
+    usage: |
+      Uzycie:
+      /<command> - Wyswietla liste wiosek.
+permissions:
+  wioskimcsv.wioska:
+    description: Pozwala na uzycie wszystkich komend pluginu WioskiMCSV
+    default: false
+    children:
+      wioskimcsv.wioski: true
+      
