@@ -1,70 +1,69 @@
 # ustawienia
 settings:
-  # czy można tworzyć wioski (true/false)
+  # czy mozna tworzyc wioski (true/false)
   create: true
-  # czy dodawać prefix do nazw członków wiosek (true/false)
+  # czy dodawac prefix do nazw czlonkow wiosek (true/false)
   # prefix: true
-  # czy pokazywać prefix wioski w tagu graczy (true/false)
+  # czy pokazywac prefix wioski w tagu graczy (true/false)
   # prefix_tag: true
-  # czy zmieniać kolor tagów graczy (true/false)
+  # czy zmieniac kolor tagow graczy (true/false)
   # tag_color: true
-  # kolor, na jaki będą widoczni gracze z wioski
+  # kolor, na jaki beda widoczni gracze z wioski
   # ally_color: green
-  # kolor, na jaki będą widoczni gracze z innych wiosek
+  # kolor, na jaki beda widoczni gracze z innych wiosek
   # enemy_color: red
-  # opłata za założenie wioski
+  # oplata za zalozenie wioski
   create_fee: 2500
   # czynsz za okres wioski
   extend_fee: 1500
-  # czas przedłużenia wioski w dniach
+  # czas przedluzenia wioski w dniach
   extend_time: 7 
   
   #####################################################################################################
-  #                                         WAŻNE!!!                                                  #
-  #   ZMIANY DOKONANE W PONIŻYCH USTAWIENIACH NIE BĘDĄ MIAŁY WPŁYWU NA STAN ISTNIEJĄCYCH JUŻ WIOSEK   #
+  #                                         WAZNE!!!                                                  #
+  #   ZMIANY DOKONANE W PONI?YCH USTAWIENIACH NIE BEDA MIALY WPLYWU NA STAN ISTNIEJACYCH JUZ WIOSEK   #
   #####################################################################################################
   
-  # maksymalna ilość członków (bez założyciela) (0 - bez limitu)
+  # maksymalna ilosc czlonkow (bez zalozyciela) (0 - bez limitu)
   max_members: 9
-  # wysokość cuboida (0 - na całą wysokość świata)
+  # wysokosc cuboida (0 - na cla wysokosc swiata)
   height: 30
-  # szerokość cuboida
+  # szerokosc cuboida
   width: 50
-  # długość cuboida
+  # dlugosc cuboida
   length: 50
-  # światy, w których można zakładać wioski ([] - wszystkie)
+  # swiaty, w ktorych mozna zakladac wioski ([] - wszystkie)
   worlds: []
-  # obszarny, na których nie można tworzyć wiosek oraz minimalna odległość wioski od nich (przykład: [{world: world, x: 0, z: 0, dist: 300}]
+  # obszarny, na ktorych nie mozna tworzyc wiosek oraz minimalna odleglosc wioski od nich (przyklad: [{world: world, x: 0, z: 0, dist: 300}]
   forbidden_area: []
-  # minimanla odległość pomiędzy wioskami
+  # minimanla odleglosc pomiedzy wioskami
   distance_village: 300
-  # prefix w nazwach regionów
+  # prefix w nazwach regionow
   prefix: "wioska_"
-  # flagi na regiony wiosek (przykład: [use: deny, pvp: allow])
+  # flagi na regiony wiosek (przyklad: [use: deny, pvp: allow])
   flags: []
 
-#wiadomości
+# wiadomosci
 messages:
-  createDisabled: "$red$Tworzenie wiosek zostalo zablokowane!"
-  notEnoughParams: "$red$Za malo argumentow!"
-  tooManyParams: "$red$Za duzo argumentow!"
-  noPerimissions: "$red$Nie masz prawa do uzycia tej komendy!"
+  createDisabled: "&4Tworzenie wiosek zostalo zablokowane!"
+  notEnoughParams: "$4Za malo argumentow!"
+  tooManyParams: "$4Za duzo argumentow!"
+  noPerimissions: "&4Nie masz prawa do uzycia tej komendy!"
   # 0 - gracz, 1 - akronim, 2 - nazwa wioski
-  stworzonoWioske: "$green$Gracz {0} stworzyl wioske ({2}) {1}."
+  stworzonoWioske: "$aGracz {0} stworzyl wioske ({2}) {1}."
   # 0 - nazwa wioski, 1 - akronim
-  nieStworzonoWioski: "$red$Wioska ({1}) {0} nie zostala stworzona!"
+  nieStworzonoWioski: "&4Wioska ({1}) {0} nie zostala stworzona!"
   # 0 - akronim
-  wioskaIstnieje: "$red$Wioska o akronimie {0} juz istnieje!"
-  listaWiosek: "$blue$Istniejace wioski:"
-  brakWiosek: "$blue$Brak wiosek."
-  zlaLokacja: "$red$Próbujesz stworzyć wioskę za blisko wyznaczonego obszaru!"
+  wioskaIstnieje: "&4Wioska o akronimie {0} juz istnieje!"
+  listaWiosek: "&9Istniejace wioski:"
+  brakWiosek: "&9Brak wiosek."
+  zlaLokacja: "&4Probujesz stworzyc wioske w miejscu niedozwolonym!"
   # 0 - gracz, 1 - akronim
-  dodanoUsera: "$green$Gracz {0} dolaczyk do wioski {1}."
+  dodanoUsera: "&aGracz {0} dolaczyk do wioski {1}."
   # 0 - gracz, 1 - akronim
-  usunietoUser: "$green$Gracz {0} zostal usuniety z wioski {1}."
-  onlyPlayer: "$red$Tylko gracz moze uzyc tej komendy!"
+  usunietoUser: "&aGracz {0} zostal usuniety z wioski {1}."
+  onlyPlayer: "&4Tylko gracz moze uzyc tej komendy!"
   # 0 - data
-  przedluzono: "$green$Przedluzono wioske do {0}."
-  niePrzedluzono: "$red$Nie przedluzono wioski!"
-  jestesWiosce: "$red$Jestes juz w wiosce!"
-  
+  przedluzono: "&aPrzedluzono wioske do {0}."
+  niePrzedluzono: "&4Nie przedluzono wioski!"
+  jestesWiosce: "&4Jestes juz w wiosce!"

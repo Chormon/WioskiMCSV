@@ -43,13 +43,13 @@ public class Config {
     }
 
     public static String getMessage(String path, Object... params) {
-        String message = plugin.getConfig().getString("messages." + path);
-        for (ChatColor color : ChatColor.values()) {
-            String key = "$" + color.name().toLowerCase() + "$";
-            if (message.contains(key)) {
-                message = message.replaceAll(key, color.toString());
-            }
-        }
+        String message = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages." + path));
+//        for (ChatColor color : ChatColor.values()) {
+//            String key = "$" + color.name().toLowerCase() + "$";
+//            if (message.contains(key)) {
+//                message = message.replaceAll(key, color.toString());
+//            }
+//        }
         if (params != null) {
             return MessageFormat.format(message, params);
         } else {
