@@ -49,7 +49,7 @@ public class WioskiMCSV extends JavaPlugin {
     @Override
     public void onEnable() {
         PluginDescriptionFile pdf = this.getDescription();
-        new PlayerTagListener(this);
+//        new PlayerTagListener(this);
         Config.initConfig(this);
         Wioska.initWioski(this);
         wioskiFile = new WioskiFile(this, "wioski.yml");
@@ -60,22 +60,27 @@ public class WioskiMCSV extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("wioska")) {
             if (args.length > 0) {
+                /* Komendy gracza */
                 if (sender instanceof Player) {
                     Player player = (Player) sender;
+                    /* Tworzenie wioski */
                     if (args[0].equalsIgnoreCase("stworz")) {
                         String akronim = args[1];
                         if (args.length < 3) {
                             sender.sendMessage(Config.getMessage("notEnoughParams"));
                             return false;
                         }
+                        /* Tworzenie zablokowane */
                         if(!Config.getCreate()) {
                             sender.sendMessage(Config.getMessage("createDisabled"));
                             return true;
                         }
+                        /* Gracz należy już do wioski */
                         if(Wioska.playerWioska(player) != null) {
                             sender.sendMessage(Config.getMessage("jestesWiosce"));                            
                             return true;
                         }
+                        /* Istnieje już taka wioska */
                         if(Wioska.getWioska(akronim) != null) {
                             sender.sendMessage(Config.getMessage("wioskaIstnieje", akronim)); 
                             return true;
@@ -86,9 +91,10 @@ public class WioskiMCSV extends JavaPlugin {
                             
                         }
                         
-                        /* czy dobra odległość */
-                        if(player.getLocation() != null) {
-                            
+                        /* Czy dobra odległość */
+                        if(!Wioska.DobraLokacja(player.getLocation())) {
+                            sender.sendMessage(Config.getMessage("zlaLokacja"));
+                            return true;
                         }
                         
                         StringBuilder concat = new StringBuilder();
@@ -102,10 +108,13 @@ public class WioskiMCSV extends JavaPlugin {
                         Wioska.StworzWioske(player, nazwa, akronim);
                         
                         /* Stworzenie odpowiedniej grupy w PEX */
+                        /* TODO in v3.0 */
+                        
                         
                         /* Stworzenie cuboidu w WG */
                         
                         return true;
+                        /* Dodawanie gracza do wioski */
                     } else if (args[0].equalsIgnoreCase("dodaj")) {
                         if (args.length < 2) {
                             sender.sendMessage(Config.getMessage("notEnoughParams"));
@@ -116,6 +125,7 @@ public class WioskiMCSV extends JavaPlugin {
                         }
                         
                         return true;
+                        /* Usuwanie gracza z wioski */
                     } else if (args[0].equalsIgnoreCase("usun")) {
                         if (args.length < 2) {
                             sender.sendMessage(Config.getMessage("notEnoughParams"));
@@ -126,6 +136,7 @@ public class WioskiMCSV extends JavaPlugin {
                         }
                         
                         return true;
+                        /* Rozwiązanie wioski */
                     } else if (args[0].equalsIgnoreCase("rozwiaz")) {
                         if (args.length > 1) {
                             sender.sendMessage(Config.getMessage("tooManyParams"));
@@ -133,6 +144,7 @@ public class WioskiMCSV extends JavaPlugin {
                         }
                         
                         return true;
+                        /* Przedłużanie najmu */
                     } else if (args[0].equalsIgnoreCase("przedluz")) {
                         if (args.length > 1) {
                             sender.sendMessage(Config.getMessage("tooManyParams"));
@@ -140,6 +152,15 @@ public class WioskiMCSV extends JavaPlugin {
                         }
                         
                         return true;
+                        /* Opuszczenie wioski */
+                    } else if (args[0].equalsIgnoreCase("opusc")) {
+                        if (args.length > 1) {
+                            sender.sendMessage(Config.getMessage("tooManyParams"));
+                            return false;
+                        }
+                        
+                        return true;
+                        /* Informacje o wioskach */
                     } else if (args[0].equalsIgnoreCase("info")) {
                         if (args.length > 2) {
                             sender.sendMessage(Config.getMessage("tooManyParams"));
@@ -147,6 +168,7 @@ public class WioskiMCSV extends JavaPlugin {
                         }
                         
                         return true;
+                        /* Lista człolnków wioski */
                     } else if (args[0].equalsIgnoreCase("czlonkowie")) {
                         if (args.length > 2) {
                             sender.sendMessage(Config.getMessage("tooManyParams"));
@@ -157,6 +179,7 @@ public class WioskiMCSV extends JavaPlugin {
                     } else if (args[0].equalsIgnoreCase("tak")) {
                     } else if (args[0].equalsIgnoreCase("nie")) {
                     }
+                    /* Komendy konsoli */
                 } else {
                     if (args[0].equalsIgnoreCase("info")) {
                         if (args.length < 2) {
@@ -184,6 +207,7 @@ public class WioskiMCSV extends JavaPlugin {
                     }
                 }
             }
+            /* Lista wiosek */
         } else if (cmd.getName().equalsIgnoreCase("wioski")) {
             if (args.length > 0) {
                 sender.sendMessage(Config.getMessage("tooManyParams"));

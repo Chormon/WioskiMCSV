@@ -61,39 +61,39 @@ public class Config {
         return plugin.getConfig().getBoolean("settings.create");
     }
     
-    public static ChatColor getAllyColor() {
-        String allyColor = plugin.getConfig().getString("settings.ally_color");
-        for (ChatColor color : ChatColor.values()) {
-            if(color.name().toLowerCase().equals(allyColor)) {
-                return color;
-            }
-        }
-        return ChatColor.GREEN;        
-    }
-    
-    public static ChatColor getEnemyColor() {
-        String enemyColor = plugin.getConfig().getString("settings.ally_color");
-        for (ChatColor color : ChatColor.values()) {
-            if(color.name().toLowerCase().equals(enemyColor)) {
-                return color;
-            }
-        }
-        return ChatColor.RED;        
-    }
-    
-    public static boolean getPrefix() {
-        return plugin.getConfig().getBoolean("settings.prefix");
-    }
-    
-    public static boolean getPrefixTag() {
-        if(getPrefix())
-            return plugin.getConfig().getBoolean("settings.prefix_tag");
-        return false;
-    }
-    
-    public static boolean getTagColor() {
-        return plugin.getConfig().getBoolean("settings.tag_color");
-    }
+//    public static ChatColor getAllyColor() {
+//        String allyColor = plugin.getConfig().getString("settings.ally_color");
+//        for (ChatColor color : ChatColor.values()) {
+//            if(color.name().toLowerCase().equals(allyColor)) {
+//                return color;
+//            }
+//        }
+//        return ChatColor.GREEN;        
+//    }
+//    
+//    public static ChatColor getEnemyColor() {
+//        String enemyColor = plugin.getConfig().getString("settings.ally_color");
+//        for (ChatColor color : ChatColor.values()) {
+//            if(color.name().toLowerCase().equals(enemyColor)) {
+//                return color;
+//            }
+//        }
+//        return ChatColor.RED;        
+//    }
+//    
+//    public static boolean getPrefix() {
+//        return plugin.getConfig().getBoolean("settings.prefix");
+//    }
+//    
+//    public static boolean getPrefixTag() {
+//        if(getPrefix())
+//            return plugin.getConfig().getBoolean("settings.prefix_tag");
+//        return false;
+//    }
+//    
+//    public static boolean getTagColor() {
+//        return plugin.getConfig().getBoolean("settings.tag_color");
+//    }
     
     public static int getMaxMembers() {
         return plugin.getConfig().getInt("settings.max_members");
@@ -115,8 +115,20 @@ public class Config {
         return plugin.getConfig().getInt("settings.length");
     }
     
-    public static int getRent() {
-        return plugin.getConfig().getInt("settings.rent");
+    public static int getCreateFee() {
+        return plugin.getConfig().getInt("settings.create_fee");
+    }
+    
+    public static int getExtendFee() {
+        return plugin.getConfig().getInt("settings.extend_fee");
+    }
+    
+    public static int getDistanceFromVillage() {
+        return plugin.getConfig().getInt("settings.distance_village");
+    }
+    
+    public static String getPrefix() {
+        return plugin.getConfig().getString("settings.prefix");
     }
     
     public static World[] getWorlds() {

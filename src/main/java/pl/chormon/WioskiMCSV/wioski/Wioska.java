@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -109,6 +110,27 @@ public class Wioska {
             String n = wioskiFile.getConfig().getString("wioski." + s + ".nazwa");
             sender.sendMessage(ChatColor.BLUE+"[" + s + "] " + n);
         }
+    }
+    
+    public static void Top(CommandSender sender) {
+//        WioskiFile wioskiFile = plugin.getWioskiFile();
+//        ConfigurationSection cs = wioskiFile.getConfig().getConfigurationSection("wioski");
+//
+//        sender.sendMessage(Config.getMessage("listaWiosek"));
+//        Set<String> wioski = cs.getKeys(false);
+//        if (wioski.size() < 1) {
+//            sender.sendMessage(Config.getMessage("brakWiosek"));
+//            return;
+//        }
+//        for (String s : wioski) {
+//            String n = wioskiFile.getConfig().getString("wioski." + s + ".nazwa");
+//            sender.sendMessage(ChatColor.BLUE+"[" + s + "] " + n);
+//        }
+    }
+    
+    public static boolean DobraLokacja(Location playerLocation) {
+        
+        return true;
     }
 
     public void destroy() {

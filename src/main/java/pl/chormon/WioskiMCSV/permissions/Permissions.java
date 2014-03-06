@@ -26,9 +26,9 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
  */
 public class Permissions {
     
-    public void test(Player player) {
-        PermissionUser user = PermissionsEx.getUser(player);
-        user.getPrefix();
-    }
+//    public void test(Player player) {
+//        PermissionUser user = PermissionsEx.getUser(player);
+//        user.getPrefix();
+//    }
     
 }
