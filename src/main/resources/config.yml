@@ -3,17 +3,19 @@ settings:
   # czy można tworzyć wioski (true/false)
   create: true
   # czy dodawać prefix do nazw członków wiosek (true/false)
-  prefix: true
+  # prefix: true
   # czy pokazywać prefix wioski w tagu graczy (true/false)
-  prefix_tag: true
+  # prefix_tag: true
   # czy zmieniać kolor tagów graczy (true/false)
-  tag_color: true
+  # tag_color: true
   # kolor, na jaki będą widoczni gracze z wioski
-  ally_color: green
+  # ally_color: green
   # kolor, na jaki będą widoczni gracze z innych wiosek
-  enemy_color: red
+  # enemy_color: red
+  # opłata za założenie wioski
+  create_fee: 2500
   # czynsz za okres wioski
-  rent: 2500
+  extend_fee: 1500
   # czas przedłużenia wioski w dniach
   extend_time: 7 
   
@@ -32,12 +34,14 @@ settings:
   length: 50
   # światy, w których można zakładać wioski ([] - wszystkie)
   worlds: []
-  # obszarny, na których nie można tworzyć wiosek (przykład: [{world: world, x: 0, z: 0}]
+  # obszarny, na których nie można tworzyć wiosek oraz minimalna odległość wioski od nich (przykład: [{world: world, x: 0, z: 0, dist: 300}]
   forbidden_area: []
-  # minimalna odległość wioski od zakazanych obszarów
-  distance_forbidden: 300
   # minimanla odległość pomiędzy wioskami
   distance_village: 300
+  # prefix w nazwach regionów
+  prefix: "wioska_"
+  # flagi na regiony wiosek (przykład: [use: deny, pvp: allow])
+  flags: []
 
 #wiadomości
 messages:
@@ -53,6 +57,7 @@ messages:
   wioskaIstnieje: "$red$Wioska o akronimie {0} juz istnieje!"
   listaWiosek: "$blue$Istniejace wioski:"
   brakWiosek: "$blue$Brak wiosek."
+  zlaLokacja: "$red$Próbujesz stworzyć wioskę za blisko wyznaczonego obszaru!"
   # 0 - gracz, 1 - akronim
   dodanoUsera: "$green$Gracz {0} dolaczyk do wioski {1}."
   # 0 - gracz, 1 - akronim
