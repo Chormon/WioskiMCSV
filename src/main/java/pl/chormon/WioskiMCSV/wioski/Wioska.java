@@ -16,6 +16,10 @@
  */
 package pl.chormon.WioskiMCSV.wioski;
 
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,13 +34,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import pl.chormon.WioskiMCSV.Config;
 import pl.chormon.WioskiMCSV.WioskiMCSV;
+import pl.chormon.WioskiMCSV.worldguard.WorldGuard;
 
 /**
  *
  * @author Chormon
  */
 public class Wioska {
-    
+
     private static WioskiMCSV plugin;
 
     private String nazwa;
@@ -44,6 +49,8 @@ public class Wioska {
     private HashMap<String, Player> members;
     private Player leader;
     private World world;
+    private BlockVector pos1;
+    private BlockVector pos2;
     private int x, y, z;
     private Date expired;
     private Date estimated;
@@ -52,48 +59,64 @@ public class Wioska {
         this.nazwa = nazwa;
         this.akronim = akronim;
     }
-    
+
     public static void initWioski(WioskiMCSV main) {
         plugin = main;
     }
-    
+
     public static String playerWioska(Player player) {
         WioskiFile wioskiFile = plugin.getWioskiFile();
         ConfigurationSection cs = wioskiFile.getConfig().getConfigurationSection("wioski");
         Set<String> wioski = cs.getKeys(false);
-        
+
         for (String s : wioski) {
-            List<String> members = wioskiFile.getConfig().getStringList("wioski."+s+".members");
-            if(members.contains(player.getName()))
+            List<String> members = wioskiFile.getConfig().getStringList("wioski." + s + ".members");
+            if (members.contains(player.getName())) {
                 return s;
-        }        
-        return null;        
+            }
+        }
+        return null;
     }
 
     public static void StworzWioske(Player player, String nazwa, String akronim) {
         WioskiFile wioskiFile = plugin.getWioskiFile();
         ConfigurationSection cs = wioskiFile.getConfig().getConfigurationSection("wioski");
         Set<String> wioski = cs.getKeys(false);
-
         for (String s : wioski) {
             if (s.equals(akronim)) {
                 player.sendMessage(Config.getMessage("nieStworzonoWioski", nazwa, akronim));
                 player.sendMessage(Config.getMessage("wioskaIstnieje", s));
                 return;
             }
-        }        
+        }
         Bukkit.getServer().broadcastMessage(Config.getMessage("stworzonoWioske", player.getName(), nazwa, akronim));
         Wioska wioska = new Wioska(nazwa, akronim);
         wioska.setLeader(player);
         wioska.setWorld(player.getLocation().getWorld());
+        
+        wioska.setPos1(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
+        wioska.setPos1(player.getLocation().getBlockX()+Config.getWidth(), player.getLocation().getBlockY()+Config.getHeight(), player.getLocation().getBlockZ()+Config.getWidth());
+        
         wioska.setX(player.getLocation().getBlockX());
         wioska.setY(player.getLocation().getBlockY());
         wioska.setZ(player.getLocation().getBlockZ());
-        wioska.setExpired(new Date(System.currentTimeMillis()+(plugin.getConfig().getInt("settings.extend_time")*3600000*24)));
+
+        wioska.setExpired(new Date(System.currentTimeMillis() + (plugin.getConfig().getInt("settings.extend_time") * 3600000 * 24)));
         wioska.setEstimated(new Date(System.currentTimeMillis()));
+        wioska.createCuboid();
         wioskiFile.addWioska(wioska);
         wioskiFile.saveConfig();
         wioskiFile.reloadConfig();
+    }
+
+    private void createCuboid() {
+        WorldGuardPlugin wgp = WorldGuard.getWorldGuard(plugin);
+
+        RegionManager regionManager = wgp.getRegionManager(world);
+
+        String prefix = Config.getPrefix();
+        ProtectedCuboidRegion pr = new ProtectedCuboidRegion(prefix + akronim, pos1, pos2);
+        regionManager.addRegion(pr);
     }
 
     public static void Lista(CommandSender sender) {
@@ -108,28 +131,16 @@ public class Wioska {
         }
         for (String s : wioski) {
             String n = wioskiFile.getConfig().getString("wioski." + s + ".nazwa");
-            sender.sendMessage(ChatColor.BLUE+"[" + s + "] " + n);
+            sender.sendMessage(ChatColor.BLUE + "[" + s + "] " + n);
         }
     }
-    
+
     public static void Top(CommandSender sender) {
-//        WioskiFile wioskiFile = plugin.getWioskiFile();
-//        ConfigurationSection cs = wioskiFile.getConfig().getConfigurationSection("wioski");
-//
-//        sender.sendMessage(Config.getMessage("listaWiosek"));
-//        Set<String> wioski = cs.getKeys(false);
-//        if (wioski.size() < 1) {
-//            sender.sendMessage(Config.getMessage("brakWiosek"));
-//            return;
-//        }
-//        for (String s : wioski) {
-//            String n = wioskiFile.getConfig().getString("wioski." + s + ".nazwa");
-//            sender.sendMessage(ChatColor.BLUE+"[" + s + "] " + n);
-//        }
-    }
-    
-    public static boolean DobraLokacja(Location playerLocation) {
         
+    }
+
+    public static boolean DobraLokacja(Location playerLocation) {
+
         return true;
     }
 
@@ -140,11 +151,11 @@ public class Wioska {
 
         return null;
     }
-    
+
     public static void saveWioska() {
         WioskiFile wioskiFile = plugin.getWioskiFile();
         wioskiFile.saveConfig();
-        wioskiFile.reloadConfig();        
+        wioskiFile.reloadConfig();
     }
 
     public Boolean addPlayer(String name) {
@@ -170,9 +181,9 @@ public class Wioska {
         saveWioska();
         return true;
     }
-    
+
     public void extend() {
-        Date newDate = new Date(this.expired.getTime()+(plugin.getConfig().getInt("settings.extend_time")*3600000*24));
+        Date newDate = new Date(this.expired.getTime() + (plugin.getConfig().getInt("settings.extend_time") * 3600000 * 24));
         this.expired = newDate;
         saveWioska();
     }
@@ -242,7 +253,7 @@ public class Wioska {
     }
 
     public String getExpired() {
-        SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd HH:mm"); 
+        SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return sdt.format(expired);
     }
 
@@ -251,13 +262,36 @@ public class Wioska {
     }
 
     public String getEstimated() {
-        SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd HH:mm"); 
+        SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return sdt.format(estimated);
     }
 
     public void setEstimated(Date estimated) {
         this.estimated = estimated;
     }
-    
-    
+
+    public BlockVector getPos1() {
+        return pos1;
+    }
+
+    public void setPos1(BlockVector pos1) {
+        this.pos1 = pos1;
+    }
+
+    public void setPos1(int x, int y, int z) {
+        this.pos1 = new BlockVector(x, y, z);
+    }
+
+    public BlockVector getPos2() {
+        return pos2;
+    }
+
+    public void setPos2(BlockVector pos2) {
+        this.pos2 = pos2;
+    }
+
+    public void setPos2(int x, int y, int z) {
+        this.pos2 = new BlockVector(x, y, z);
+    }
+
 }
