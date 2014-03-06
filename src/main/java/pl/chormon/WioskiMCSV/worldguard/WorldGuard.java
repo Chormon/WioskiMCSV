@@ -18,7 +18,6 @@ package pl.chormon.WioskiMCSV.worldguard;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.plugin.Plugin;
-import pl.chormon.WioskiMCSV.wioski.Wioska;
 import pl.chormon.WioskiMCSV.WioskiMCSV;
 
 /**
@@ -27,7 +26,7 @@ import pl.chormon.WioskiMCSV.WioskiMCSV;
  */
 public class WorldGuard {
     
-    private static WorldGuardPlugin getWorldGuard(WioskiMCSV plugin) {
+    public static WorldGuardPlugin getWorldGuard(WioskiMCSV plugin) {
         Plugin WG = plugin.getServer().getPluginManager().getPlugin("WorldGuard");
 
         // WorldGuard may not be loaded
@@ -36,10 +35,6 @@ public class WorldGuard {
         }
 
         return (WorldGuardPlugin) WG;
-    }
-    
-    public void createCuboid(Wioska wioska) {
-        
     }
     
 }

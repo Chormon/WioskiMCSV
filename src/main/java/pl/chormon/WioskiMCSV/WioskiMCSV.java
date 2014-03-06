@@ -48,12 +48,12 @@ public class WioskiMCSV extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        PluginDescriptionFile pdf = this.getDescription();
-//        new PlayerTagListener(this);
-        Config.initConfig(this);
-        Wioska.initWioski(this);
-        wioskiFile = new WioskiFile(this, "wioski.yml");
-        getLogger().log(Level.INFO, "{0} {1} enabled!", new Object[]{pdf.getName(), pdf.getVersion()});
+            PluginDescriptionFile pdf = this.getDescription();
+    //        new PlayerTagListener(this);
+            Config.initConfig(this);
+            Wioska.initWioski(this);
+            wioskiFile = new WioskiFile(this, "wioski.yml");
+            getLogger().log(Level.INFO, "{0} {1} enabled!", new Object[]{pdf.getName(), pdf.getVersion()});
     }
 
     @Override
@@ -65,11 +65,11 @@ public class WioskiMCSV extends JavaPlugin {
                     Player player = (Player) sender;
                     /* Tworzenie wioski */
                     if (args[0].equalsIgnoreCase("stworz")) {
-                        String akronim = args[1];
                         if (args.length < 3) {
                             sender.sendMessage(Config.getMessage("notEnoughParams"));
                             return false;
                         }
+                        String akronim = args[1];
                         /* Tworzenie zablokowane */
                         if(!Config.getCreate()) {
                             sender.sendMessage(Config.getMessage("createDisabled"));
