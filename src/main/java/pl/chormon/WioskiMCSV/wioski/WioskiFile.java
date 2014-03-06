@@ -90,18 +90,19 @@ public class WioskiFile {
     }
     
     public void addWioska(Wioska wioska) {
-        this.fileConfiguration.createSection("wioski."+wioska.getAkronim());
-        this.fileConfiguration.set("wioski."+wioska.getAkronim()+".nazwa", wioska.getNazwa());
-        this.fileConfiguration.set("wioski."+wioska.getAkronim()+".przywodca", wioska.getLeader());
+        String section = "wioski"+wioska.getAkronim();
+        this.fileConfiguration.createSection(section);
+        this.fileConfiguration.set(section+".nazwa", wioska.getNazwa());
+        this.fileConfiguration.set(section+".przywodca", wioska.getLeader());
         String[] czlonkowie = (String[]) wioska.getMembers().keySet().toArray();
-        this.fileConfiguration.set("wioski."+wioska.getAkronim()+".czlonkowie", czlonkowie);
-        this.fileConfiguration.createSection("wioski."+wioska.getAkronim()+".lokacja");
-        this.fileConfiguration.set("wioski."+wioska.getAkronim()+".lokacja.world", wioska.getWorld());
-        this.fileConfiguration.set("wioski."+wioska.getAkronim()+".lokacja.x", wioska.getX());
-        this.fileConfiguration.set("wioski."+wioska.getAkronim()+".koordy.y", wioska.getY());
-        this.fileConfiguration.set("wioski."+wioska.getAkronim()+".lokacja.z", wioska.getZ());
-        this.fileConfiguration.set("wioski."+wioska.getAkronim()+".zalozono", wioska.getEstimated());
-        this.fileConfiguration.set("wioski."+wioska.getAkronim()+".do", wioska.getExpired());
+        this.fileConfiguration.set(section+".czlonkowie", czlonkowie);
+        this.fileConfiguration.createSection(section+".lokacja");
+        this.fileConfiguration.set(section+".lokacja.world", wioska.getWorld());
+        this.fileConfiguration.set(section+".lokacja.x", wioska.getX());
+        this.fileConfiguration.set(section+".lokacja.y", wioska.getY());
+        this.fileConfiguration.set(section+".lokacja.z", wioska.getZ());
+        this.fileConfiguration.set(section+".zalozono", wioska.getEstimated());
+        this.fileConfiguration.set(section+".do", wioska.getExpired());
     }
     
     public void editWioska(Wioska wioska) {
@@ -111,40 +112,4 @@ public class WioskiFile {
     public void deleteWioska(String nazwa) {
         
     }
-    
-//	protected File file;
-//	public final static char PATH_SEPARATOR = '/';
-//
-//	public WioskiFile(File file) {
-//		super();
-//
-//		this.options().pathSeparator(PATH_SEPARATOR);
-//
-//		this.file = file;
-//
-//		this.reload();
-//	}
-//
-//	public File getFile() {
-//		return file;
-//	}
-//
-//	public void reload() {
-//
-//		try {
-//			this.load(file);
-//		} catch (FileNotFoundException e) {
-//                        this.save();
-//		} catch (Throwable e) {
-//			throw new IllegalStateException("Blad podczas ladowania pliku z wioskami", e);
-//		}
-//	}
-//
-//	public void save() {
-//		try {
-//			this.save(file);
-//		} catch (IOException e) {
-//			Logger.getLogger("Minecraft").severe("[WioskiMCSV] Blad podczas zapisywania pliku z wioskami: " + e.getMessage());
-//		}
-//	}
 }
