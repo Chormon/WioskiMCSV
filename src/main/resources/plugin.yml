@@ -3,7 +3,7 @@ description: Autorski plugin do zarzadzania wioskami na serwerze MCSV.pl
 main: pl.chormon.WioskiMCSV.WioskiMCSV
 author: Chormon
 version: "${project.version}"
-depend: [PermissionsEx, WorldGuard]
+depend: [Essentials, PermissionsEx, WorldGuard]
 commands:
   wioska:
     description: Wszystkie komendy pluginu WioskiMCSV
@@ -16,6 +16,7 @@ commands:
       /<command> usun <nazwa gracza> - Usuwa gracza <nazwa gracza> z wioski.
       /<command> rozwiaz - Rozwiazuje wioske.
       /<command> przedluz - Przedluza czas wioski.
+      /<command> opusc - Opuszczenie przez gracza wioski.
       /<command> info - Pokazuje informacje o wiosce, w ktorej sie jest.
       /<command> info <akronim> - Pokazuje informacje o wiosce <akronim>.
       /<command> czlonkowie - Wyswietla liste czlonkow wioski, w ktorej sie jest.
