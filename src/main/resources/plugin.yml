@@ -7,7 +7,7 @@ depend: [Essentials, PermissionsEx, WorldGuard]
 commands:
   wioska:
     description: Wszystkie komendy pluginu WioskiMCSV
-    permission: <plugin name>.wioska
+    permission: wioskimcsv.wioska
     usage: |
       Uzycie:
       /<command> - Wyswietla pomoc
@@ -25,6 +25,7 @@ commands:
       /<command> nie <akronim> - Odrzucenie zaproszenia do wioski.
   wioski:
     description: Wyswietla liste wiosek
+    permission: wioskimcsv.wioski
     usage: |
       Uzycie:
       /<command> - Wyswietla liste wiosek.
