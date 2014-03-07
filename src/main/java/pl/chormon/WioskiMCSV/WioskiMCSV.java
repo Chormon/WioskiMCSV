@@ -76,7 +76,7 @@ public class WioskiMCSV extends JavaPlugin {
                             return true;
                         }
                         /* Gracz należy już do wioski */
-                        if(Wioska.playerWioska(player) != null) {
+                        if(Wioska.playerWioska(player) != null) {                            
                             sender.sendMessage(Config.getMessage("jestesWiosce"));                            
                             return true;
                         }
@@ -92,7 +92,7 @@ public class WioskiMCSV extends JavaPlugin {
                         }
                         
                         /* Czy dobra odległość */
-                        if(!Wioska.DobraLokacja(player.getLocation())) {
+                        if(!Wioska.czyDobraLokacja(player.getLocation())) {
                             sender.sendMessage(Config.getMessage("zlaLokacja"));
                             return true;
                         }

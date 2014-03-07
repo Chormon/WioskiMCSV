@@ -70,7 +70,7 @@ public class Wioska {
         Set<String> wioski = cs.getKeys(false);
 
         for (String s : wioski) {
-            List<String> members = wioskiFile.getConfig().getStringList("wioski." + s + ".members");
+            List<String> members = wioskiFile.getConfig().getStringList("wioski." + s + ".czlonkowie");
             if (members.contains(player.getName())) {
                 return s;
             }
@@ -135,11 +135,11 @@ public class Wioska {
         }
     }
 
-    public static void Top(CommandSender sender) {
+    public static void top(CommandSender sender) {
         
     }
 
-    public static boolean DobraLokacja(Location playerLocation) {
+    public static boolean czyDobraLokacja(Location playerLocation) {
 
         return true;
     }

@@ -46,11 +46,11 @@ settings:
 # wiadomosci
 messages:
   createDisabled: "&4Tworzenie wiosek zostalo zablokowane!"
-  notEnoughParams: "$4Za malo argumentow!"
-  tooManyParams: "$4Za duzo argumentow!"
+  notEnoughParams: "&4Za malo argumentow!"
+  tooManyParams: "&4Za duzo argumentow!"
   noPerimissions: "&4Nie masz prawa do uzycia tej komendy!"
   # 0 - gracz, 1 - akronim, 2 - nazwa wioski
-  stworzonoWioske: "$aGracz {0} stworzyl wioske ({2}) {1}."
+  stworzonoWioske: "&aGracz {0} stworzyl wioske ({2}) {1}."
   # 0 - nazwa wioski, 1 - akronim
   nieStworzonoWioski: "&4Wioska ({1}) {0} nie zostala stworzona!"
   # 0 - akronim
