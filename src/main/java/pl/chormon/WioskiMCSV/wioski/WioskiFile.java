@@ -19,6 +19,8 @@ package pl.chormon.WioskiMCSV.wioski;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -90,26 +92,46 @@ public class WioskiFile {
     }
     
     public void addWioska(Wioska wioska) {
-        String section = "wioski"+wioska.getAkronim();
+        String section = "wioski."+wioska.getAkronim();
         this.fileConfiguration.createSection(section);
         this.fileConfiguration.set(section+".nazwa", wioska.getNazwa());
         this.fileConfiguration.set(section+".przywodca", wioska.getLeader());
-        String[] czlonkowie = (String[]) wioska.getMembers().keySet().toArray();
-        this.fileConfiguration.set(section+".czlonkowie", czlonkowie);
+        this.fileConfiguration.set(section+".czlonkowie", wioska.getMembers().toArray());
         this.fileConfiguration.createSection(section+".lokacja");
         this.fileConfiguration.set(section+".lokacja.world", wioska.getWorld());
-        this.fileConfiguration.set(section+".lokacja.x", wioska.getX());
-        this.fileConfiguration.set(section+".lokacja.y", wioska.getY());
-        this.fileConfiguration.set(section+".lokacja.z", wioska.getZ());
+//        List<Integer> pos1 = new ArrayList<>();
+//        pos1.add(wioska.getPos1().getBlockX());
+//        pos1.add(wioska.getPos1().getBlockY());
+//        pos1.add(wioska.getPos1().getBlockZ());
+//        plugin.getLogger().log(Level.INFO, "Pos1: {0} {1} {2}", new Object[]{wioska.getPos1().getBlockX(), wioska.getPos1().getBlockY(), wioska.getPos1().getBlockZ()});
+//        List<Integer> pos2 = new ArrayList<>();
+//        pos2.add(wioska.getPos2().getBlockX());
+//        pos2.add(wioska.getPos2().getBlockY());
+//        pos2.add(wioska.getPos2().getBlockZ());
+//        plugin.getLogger().log(Level.INFO, "Pos2: {0} {1} {2}", new Object[]{wioska.getPos2().getBlockX(), wioska.getPos2().getBlockY(), wioska.getPos2().getBlockZ()});
+        this.fileConfiguration.set(section+".lokacja.pos1", new Object[]{wioska.getPos1().getBlockX(), wioska.getPos1().getBlockY(), wioska.getPos1().getBlockZ()});
+        this.fileConfiguration.set(section+".lokacja.pos2", new Object[]{wioska.getPos2().getBlockX(), wioska.getPos2().getBlockY(), wioska.getPos2().getBlockZ()});
         this.fileConfiguration.set(section+".zalozono", wioska.getEstimated());
         this.fileConfiguration.set(section+".do", wioska.getExpired());
+        saveConfig();
     }
     
     public void editWioska(Wioska wioska) {
-        
+        String section = "wioski."+wioska.getAkronim();
+        this.fileConfiguration.set(section+".nazwa", wioska.getNazwa());
+        this.fileConfiguration.set(section+".przywodca", wioska.getLeader());
+        this.fileConfiguration.set(section+".czlonkowie", wioska.getMembers().toArray());
+        this.fileConfiguration.set(section+".lokacja.world", wioska.getWorld());
+        this.fileConfiguration.set(section+".lokacja.pos1", new Integer[] {wioska.getPos1().getBlockX(), wioska.getPos1().getBlockY(), wioska.getPos1().getBlockZ()});
+        this.fileConfiguration.set(section+".lokacja.pos2", new Integer[] {wioska.getPos2().getBlockX(), wioska.getPos2().getBlockY(), wioska.getPos2().getBlockZ()});
+        this.fileConfiguration.set(section+".zalozono", wioska.getEstimated());
+        this.fileConfiguration.set(section+".do", wioska.getExpired());
+        saveConfig();
     }
     
-    public void deleteWioska(String nazwa) {
-        
+    public void deleteWioska(String wioska) {
+        String section = "wioski."+wioska;
+        this.fileConfiguration.set(section, null);
+        saveConfig();
     }
 }

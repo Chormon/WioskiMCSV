@@ -1,0 +1,17 @@
+WioskiMCSV v1.0:
+- zak³adanie cuboida (zwanego dalej wiosk¹);
+- dodawanie oraz usuwanie przez twórcê cuboida (zwanego dalej za³o¿ycielem) graczy do wioski;
+- usuwanie wioski przez za³o¿yciela;
+- mo¿liwoœæ odejœcia gracza z wioski;
+- wyœwietlanie listy wiosek;
+- wyœwietlanie informacji o wiosce;
+- wyœwietlanie listy cz³onów wioski;
+- mo¿liwoœæ ustawienia maksymalnej iloœci osób w cuboidziel
+- mo¿liwoœæ ustawienia rozmiarów (wysokoœæ, szerokoœæ, d³ugoœæ) tworzonych wiosek;
+- mo¿liwoœæ ustawienia kwoty za³o¿enia oraz przed³u¿onia czasu wa¿noœci wioski;
+- mo¿liwoœæ ustawienia czasu przed³u¿enia wioski (po up³yniêciu terminu wioska zostaje automatycznie usuniêta);
+- mo¿liwoœæ ustawienia œwiatów, na których mo¿na zak³adaæ wioski;
+- mo¿liwoœæ ustawienia miejsc i odleg³oœci od nich, na których wioski nie mog¹ byæ tworzone;
+- mo¿liwoœæ ustawienia minimalnego dystansu pomiêdzy wioskami;
+- mo¿liwoœæ ustawienia flag, jakie maj¹ byæ dodawane do cuboidu podczas jego tworzenia;
+- mo¿liwoœæ ustawienia prefixu do nazw tworzonych regionów;

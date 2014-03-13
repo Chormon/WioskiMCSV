@@ -32,8 +32,9 @@ public class Config {
 
     public static void initConfig(WioskiMCSV main) {
         main.reloadConfig();
-        main.getConfig().options().copyDefaults(true);
-        main.saveConfig();
+//        main.getConfig().options().copyDefaults(true);
+//        main.saveConfig();
+        main.saveDefaultConfig();
         plugin = main;
     }
     
@@ -59,6 +60,10 @@ public class Config {
     
     public static boolean getCreate() {
         return plugin.getConfig().getBoolean("settings.create");
+    }
+    
+    public static boolean getBroadcast() {
+        return plugin.getConfig().getBoolean("settings.broadcast");
     }
     
 //    public static ChatColor getAllyColor() {
@@ -115,12 +120,12 @@ public class Config {
         return plugin.getConfig().getInt("settings.length");
     }
     
-    public static int getCreateFee() {
-        return plugin.getConfig().getInt("settings.create_fee");
+    public static double getCreateFee() {
+        return plugin.getConfig().getDouble("settings.create_fee");
     }
     
-    public static int getExtendFee() {
-        return plugin.getConfig().getInt("settings.extend_fee");
+    public static double getExtendFee() {
+        return plugin.getConfig().getDouble("settings.extend_fee");
     }
     
     public static int getDistanceFromVillage() {

@@ -2,6 +2,8 @@
 settings:
   # czy mozna tworzyc wioski (true/false)
   create: true
+  # czy oglaszac stworzenie wioski, dodawanie i usuwanie czlonkow, rozwiazanie wioski
+  broadcast: true
   # czy dodawac prefix do nazw czlonkow wiosek (true/false)
   # prefix: true
   # czy pokazywac prefix wioski w tagu graczy (true/false)
@@ -17,7 +19,7 @@ settings:
   # czynsz za okres wioski
   extend_fee: 1500
   # czas przedluzenia wioski w dniach
-  extend_time: 7 
+  extend_time: 7
   
   #####################################################################################################
   #                                         WAZNE!!!                                                  #
@@ -49,21 +51,31 @@ messages:
   notEnoughParams: "&4Za malo argumentow!"
   tooManyParams: "&4Za duzo argumentow!"
   noPerimissions: "&4Nie masz prawa do uzycia tej komendy!"
+  notEnoughMoney: "&4Nie masz wystarczajaco duzo pieniedzy!"
   # 0 - gracz, 1 - akronim, 2 - nazwa wioski
   stworzonoWioske: "&aGracz {0} stworzyl wioske ({2}) {1}."
   # 0 - nazwa wioski, 1 - akronim
   nieStworzonoWioski: "&4Wioska ({1}) {0} nie zostala stworzona!"
+  # 0 - nazwa wioski, 1 - akronim
+  rozwiazanoWioske: "&4Wioska ({1}) {0} zostala rozwiazana!"
   # 0 - akronim
   wioskaIstnieje: "&4Wioska o akronimie {0} juz istnieje!"
+  # 0 - akronim
+  wioskaNieIstnieje: "&4Wioska o akronimie {0} nie istnieje!"
   listaWiosek: "&9Istniejace wioski:"
+  # 0 - akronim, 1 - nazwa wioski
+  listaWiosekPkt: "&9- (&f{0}&9) &f{1}"
   brakWiosek: "&9Brak wiosek."
+  # 0 - akronim, 1 - nazwa wioski, 2 - przywodca, 3 - czlonkowie, 4 - lokalizacja (swiat), 5 - lokalizacja (koordynaty), 6 - data zalozenia, 7 - data waznosci
+  infoWioska: "&9Informacje o wiosce (&f{0}&9) &f{1}&9:\n   Przywodca: &f{2}&9\n   Czlonkowie: &f{3}&9\n   Lokalizacja: &f{4}, {5}&9\n   Data zalozenia: &f{6}&9\n   Data waznosci: &f{7}&9"
   zlaLokacja: "&4Probujesz stworzyc wioske w miejscu niedozwolonym!"
   # 0 - gracz, 1 - akronim
-  dodanoUsera: "&aGracz {0} dolaczyk do wioski {1}."
+  dodanoUsera: "&aGracz {0} dolaczyl do wioski {1}."
   # 0 - gracz, 1 - akronim
-  usunietoUser: "&aGracz {0} zostal usuniety z wioski {1}."
+  usunietoUsera: "&aGracz {0} zostal usuniety z wioski {1}."
   onlyPlayer: "&4Tylko gracz moze uzyc tej komendy!"
   # 0 - data
   przedluzono: "&aPrzedluzono wioske do {0}."
   niePrzedluzono: "&4Nie przedluzono wioski!"
   jestesWiosce: "&4Jestes juz w wiosce!"
+  nieJestesWiosce: "&4Nie jestes w zadnej wiosce!"

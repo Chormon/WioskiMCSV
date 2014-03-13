@@ -20,17 +20,21 @@ import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import pl.chormon.WioskiMCSV.Config;
 import pl.chormon.WioskiMCSV.WioskiMCSV;
@@ -46,12 +50,11 @@ public class Wioska {
 
     private String nazwa;
     private String akronim;
-    private HashMap<String, Player> members;
-    private Player leader;
-    private World world;
+    private List<String> members;
+    private String leader;
+    private String world;
     private BlockVector pos1;
     private BlockVector pos2;
-    private int x, y, z;
     private Date expired;
     private Date estimated;
 
@@ -64,62 +67,58 @@ public class Wioska {
         plugin = main;
     }
 
-    public static String playerWioska(Player player) {
-        WioskiFile wioskiFile = plugin.getWioskiFile();
-        ConfigurationSection cs = wioskiFile.getConfig().getConfigurationSection("wioski");
-        Set<String> wioski = cs.getKeys(false);
-
-        for (String s : wioski) {
-            List<String> members = wioskiFile.getConfig().getStringList("wioski." + s + ".czlonkowie");
-            if (members.contains(player.getName())) {
-                return s;
-            }
-        }
-        return null;
-    }
-
-    public static void StworzWioske(Player player, String nazwa, String akronim) {
+    public static void stworzWioske(Player player, String nazwa, String akronim) {
         WioskiFile wioskiFile = plugin.getWioskiFile();
         ConfigurationSection cs = wioskiFile.getConfig().getConfigurationSection("wioski");
         Set<String> wioski = cs.getKeys(false);
         for (String s : wioski) {
-            if (s.equals(akronim)) {
+            if (s.toLowerCase().equals(akronim.toLowerCase())) {
                 player.sendMessage(Config.getMessage("nieStworzonoWioski", nazwa, akronim));
                 player.sendMessage(Config.getMessage("wioskaIstnieje", s));
                 return;
             }
         }
-        Bukkit.getServer().broadcastMessage(Config.getMessage("stworzonoWioske", player.getName(), nazwa, akronim));
         Wioska wioska = new Wioska(nazwa, akronim);
-        wioska.setLeader(player);
-        wioska.setWorld(player.getLocation().getWorld());
-        
-        wioska.setPos1(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
-        wioska.setPos1(player.getLocation().getBlockX()+Config.getWidth(), player.getLocation().getBlockY()+Config.getHeight(), player.getLocation().getBlockZ()+Config.getWidth());
-        
-        wioska.setX(player.getLocation().getBlockX());
-        wioska.setY(player.getLocation().getBlockY());
-        wioska.setZ(player.getLocation().getBlockZ());
+        wioska.setLeader(player.getName());
+        wioska.setMembers(new ArrayList<String>());
+        wioska.setWorld(player.getLocation().getWorld().getName());
+
+        Location pLocation = player.getLocation();
+
+        wioska.setPos1(pLocation.getBlockX(), pLocation.getBlockY() - 1, pLocation.getBlockZ());
+        wioska.setPos2(pLocation.getBlockX() + Config.getWidth() - 1, pLocation.getBlockY() - 1 + Config.getHeight() - 1, pLocation.getBlockZ() + Config.getLength() - 1);
 
         wioska.setExpired(new Date(System.currentTimeMillis() + (plugin.getConfig().getInt("settings.extend_time") * 3600000 * 24)));
         wioska.setEstimated(new Date(System.currentTimeMillis()));
-        wioska.createCuboid();
-        wioskiFile.addWioska(wioska);
-        wioskiFile.saveConfig();
-        wioskiFile.reloadConfig();
+        try {
+            wioska.createCuboid();
+            wioskiFile.addWioska(wioska);
+            wioskiFile.saveConfig();
+            wioskiFile.reloadConfig();
+            if (Config.getBroadcast()) {
+                Bukkit.getServer().broadcastMessage(Config.getMessage("stworzonoWioske", player.getName(), nazwa, akronim));
+            } else {
+                player.sendMessage(Config.getMessage("stworzonoWioske", player.getName(), nazwa, akronim));
+            }
+            return;
+        } catch (Exception ex) {
+            Logger.getLogger(Wioska.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        // Message that something really bad has happened and village hasn't been created
     }
 
-    private void createCuboid() {
+    private void createCuboid() throws Exception {
         WorldGuardPlugin wgp = WorldGuard.getWorldGuard(plugin);
-
-        RegionManager regionManager = wgp.getRegionManager(world);
+        World w = Bukkit.getServer().getWorld(world);
+        RegionManager regionManager = wgp.getRegionManager(w);
 
         String prefix = Config.getPrefix();
-        ProtectedCuboidRegion pr = new ProtectedCuboidRegion(prefix + akronim, pos1, pos2);
+        ProtectedCuboidRegion pr = new ProtectedCuboidRegion(prefix + akronim, getPos1(), getPos2());
         regionManager.addRegion(pr);
     }
 
-    public static void Lista(CommandSender sender) {
+    public static void lista(CommandSender sender) {
         WioskiFile wioskiFile = plugin.getWioskiFile();
         ConfigurationSection cs = wioskiFile.getConfig().getConfigurationSection("wioski");
 
@@ -131,15 +130,15 @@ public class Wioska {
         }
         for (String s : wioski) {
             String n = wioskiFile.getConfig().getString("wioski." + s + ".nazwa");
-            sender.sendMessage(ChatColor.BLUE + "[" + s + "] " + n);
+            sender.sendMessage(Config.getMessage("listaWiosekPkt", s, n));
         }
     }
 
     public static void top(CommandSender sender) {
-        
+
     }
 
-    public static boolean czyDobraLokacja(Location playerLocation) {
+    public static boolean goodPlace(Location playerLocation) {
 
         return true;
     }
@@ -147,15 +146,68 @@ public class Wioska {
     public void destroy() {
     }
 
-    public static Wioska getWioska(String akronim) {
-
-        return null;
+    public void saveWioska() {
+        WioskiFile wioskiFile = plugin.getWioskiFile();
+        wioskiFile.editWioska(this);
     }
 
-    public static void saveWioska() {
-        WioskiFile wioskiFile = plugin.getWioskiFile();
-        wioskiFile.saveConfig();
-        wioskiFile.reloadConfig();
+    public static Boolean addPlayer(String member, Player sender) {
+        Wioska w = Wioska.getWioska(sender);
+        if (w == null) {
+            return false;
+        }
+
+        if (!w.addPlayer(member)) {
+            return false;
+        }
+
+        if (Config.getBroadcast()) {
+            Bukkit.getServer().broadcastMessage(Config.getMessage("usunietoUsera", member, w.getAkronim()));
+        } else {
+            sender.sendMessage(Config.getMessage("usunietoUsera", member, w.getAkronim()));
+        }
+        return true;
+    }
+
+    public static Boolean removePlayer(String member, Player sender) {
+        Wioska w = Wioska.getWioska(sender);
+        if (w == null) {
+            return false;
+        }
+
+        if (!w.removePlayer(member)) {
+            return false;
+        }
+
+        if (Config.getBroadcast()) {
+            Bukkit.getServer().broadcastMessage(Config.getMessage("usunietoUsera", member, w.getAkronim()));
+        } else {
+            sender.sendMessage(Config.getMessage("usunietoUsera", member, w.getAkronim()));
+        }
+
+        return true;
+    }
+
+    public static void removePlayer(Player sender) {
+        Wioska w = Wioska.getWioska(sender);
+        if (w == null) {
+            sender.sendMessage(Config.getMessage("nieJestesWiosce"));
+            return;
+        }
+
+        if (sender.getName().equals(w.getLeader())) {
+            return;
+        }
+
+        if (!w.removePlayer(sender.getName())) {
+            return;
+        }
+
+        if (Config.getBroadcast()) {
+            Bukkit.getServer().broadcastMessage(Config.getMessage("usunietoUsera", sender.getName(), w.getAkronim()));
+        } else {
+            sender.sendMessage(Config.getMessage("usunietoUsera", sender.getName(), w.getAkronim()));
+        }
     }
 
     public Boolean addPlayer(String name) {
@@ -163,23 +215,169 @@ public class Wioska {
         if (p == null) {
             return false;
         }
-        if (p.getName().equals(leader.getName())) {
+        if (p.getName().equals(leader)) {
             return false;
         }
-        members.put(name, p);
-        Bukkit.getServer().broadcastMessage(Config.getMessage("dodanoUsera", name, this.getAkronim()));
+        members.add(name);
+
+        /* Dodanie gracza do cuboidu i configu */
         saveWioska();
         return true;
     }
 
     public Boolean removePlayer(String name) {
-        if (!members.containsKey(name)) {
+        if (!members.contains(name)) {
             return false;
         }
+
+        /* Usunięcie gracza z cuboidu i configu */
         members.remove(name);
-        Bukkit.getServer().broadcastMessage(Config.getMessage("usunietoUsera", name, this.getAkronim()));
         saveWioska();
         return true;
+    }
+
+    public static Wioska getWioska(Player player) {
+        WioskiFile wioskiFile = plugin.getWioskiFile();
+        ConfigurationSection cs = wioskiFile.getConfig().getConfigurationSection("wioski");
+        Set<String> wioski = cs.getKeys(false);
+
+        for (String s : wioski) {
+            String leader = wioskiFile.getConfig().getString("wioski." + s + ".przywodca");
+            if (leader.equals(player.getName())) {
+                return getWioska(s);
+            }
+            List<String> members = wioskiFile.getConfig().getStringList("wioski." + s + ".czlonkowie");
+            if (members.contains(player.getName())) {
+                return getWioska(s);
+            }
+        }
+        return null;
+    }
+
+    public static String getAkronim(Player player) {
+        WioskiFile wioskiFile = plugin.getWioskiFile();
+        ConfigurationSection cs = wioskiFile.getConfig().getConfigurationSection("wioski");
+        Set<String> wioski = cs.getKeys(false);
+
+        for (String s : wioski) {
+            String leader = wioskiFile.getConfig().getString("wioski." + s + ".przywodca");
+            if (leader.equals(player.getName())) {
+                return s;
+            }
+            List<String> members = wioskiFile.getConfig().getStringList("wioski." + s + ".czlonkowie");
+            if (members.contains(player.getName())) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public static Wioska getWioska(String akronim) {
+        WioskiFile wioskiFile = plugin.getWioskiFile();
+        ConfigurationSection cs = wioskiFile.getConfig().getConfigurationSection("wioski");
+        Set<String> wioski = cs.getKeys(false);
+
+        for (String s : wioski) {
+            if (s.toLowerCase().equals(akronim.toLowerCase())) {
+                FileConfiguration wioskaConfig = wioskiFile.getConfig();
+                String path = "wioski." + s + ".";
+                Wioska w = new Wioska(wioskaConfig.getString(path + "nazwa"), s);
+
+                w.setLeader(wioskaConfig.getString(path + "przywodca"));
+                w.setMembers(wioskaConfig.getStringList(path + "czlonkowie"));
+
+                SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                Date est = null;
+                try {
+                    est = sdt.parse(wioskaConfig.getString(path + "zalozono"));
+                } catch (ParseException ex) {
+                    Logger.getLogger(Wioska.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                w.setEstimated(est);
+
+                Date exp = null;
+                try {
+                    exp = sdt.parse(wioskaConfig.getString(path + "do"));
+                } catch (ParseException ex) {
+                    Logger.getLogger(Wioska.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                w.setExpired(exp);
+                List<Integer> pt1 = wioskaConfig.getIntegerList(path + "lokacja.pos1");
+                List<Integer> pt2 = wioskaConfig.getIntegerList(path + "lokacja.pos2");
+                w.setPos1(pt1.get(0), pt1.get(1), pt1.get(2));
+                w.setPos2(pt2.get(0), pt2.get(1), pt2.get(2));
+                w.setWorld(wioskaConfig.getString(path + "lokacja.world"));
+
+                return w;
+            }
+        }
+
+        return null;
+    }
+
+    public static void delete(Player player) {
+        WioskiFile wioskiFile = plugin.getWioskiFile();
+        Wioska w = getWioska(player);
+        if (w != null) {
+            if (w.getLeader().equals(player.getName())) {
+                w.delete();
+                if (Config.getBroadcast()) {
+                    Bukkit.getServer().broadcastMessage(Config.getMessage("rozwiazanoWioske", w.getAkronim(), w.getNazwa()));
+                } else {
+                    player.sendMessage(Config.getMessage("rozwiazanoWioske", w.getAkronim(), w.getNazwa()));
+                }
+            }
+        } else {
+            player.sendMessage(Config.getMessage("nieJestesWiosce"));
+        }
+    }
+
+    public void delete() {
+        deleteCuboid();
+        WioskiFile wioskiFile = plugin.getWioskiFile();
+        wioskiFile.deleteWioska(this.getAkronim());
+    }
+
+    public void deleteCuboid() {
+        WioskiFile wioskiFile = plugin.getWioskiFile();
+        WorldGuardPlugin wgp = WorldGuard.getWorldGuard(plugin);
+        World w = Bukkit.getServer().getWorld(world);
+        RegionManager regionManager = wgp.getRegionManager(w);
+
+        String prefix = Config.getPrefix();
+        regionManager.removeRegion(prefix + getAkronim());
+    }
+
+    public static boolean info(Player player) {
+        Wioska w = getWioska(player);
+        if (w == null) {
+            return false;
+        }
+        w.showInfo(player);
+        return true;
+    }
+
+    public static boolean info(CommandSender sender, String akronim) {
+        Wioska w = getWioska(akronim);
+        if (w == null) {
+            return false;
+        }
+        w.showInfo(sender);
+        return true;
+    }
+
+    public void showInfo(CommandSender sender) {
+        StringBuilder sb = new StringBuilder();
+        Iterator<String> ite = members.iterator();
+        while (ite.hasNext()) {
+            sb.append(ite.next());
+            if (ite.hasNext()) {
+                sb.append(", ");
+            }
+        }
+        String pos = "(" + pos1.getBlockX() + ", " + pos1.getBlockY() + ", " + pos1.getBlockZ() + ") => " + "(" + pos2.getBlockX() + ", " + pos2.getBlockY() + ", " + pos2.getBlockZ() + ")";
+        sender.sendMessage(Config.getMessage("infoWioska", akronim, nazwa, leader, sb.toString(), world, pos, getEstimated(), getExpired()));
+
     }
 
     public void extend() {
@@ -204,51 +402,27 @@ public class Wioska {
         this.akronim = akronim;
     }
 
-    public HashMap<String, Player> getMembers() {
+    public List<String> getMembers() {
         return members;
     }
 
-    public void setMembers(HashMap<String, Player> members) {
+    public void setMembers(List<String> members) {
         this.members = members;
     }
 
-    public Player getLeader() {
+    public String getLeader() {
         return leader;
     }
 
-    public void setLeader(Player leader) {
+    public void setLeader(String leader) {
         this.leader = leader;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getZ() {
-        return z;
-    }
-
-    public void setZ(int z) {
-        this.z = z;
-    }
-
-    public World getWorld() {
+    public String getWorld() {
         return world;
     }
 
-    public void setWorld(World world) {
+    public void setWorld(String world) {
         this.world = world;
     }
 

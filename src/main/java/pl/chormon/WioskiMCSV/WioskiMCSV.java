@@ -25,7 +25,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.chormon.WioskiMCSV.tags.PlayerTagListener;
+import com.earth2me.essentials.api.Economy;
+import com.earth2me.essentials.api.NoLoanPermittedException;
+import com.earth2me.essentials.api.UserDoesNotExistException;
+import java.math.BigDecimal;
+import java.util.logging.Logger;
 
 /**
  *
@@ -48,19 +52,19 @@ public class WioskiMCSV extends JavaPlugin {
 
     @Override
     public void onEnable() {
-            PluginDescriptionFile pdf = this.getDescription();
-    //        new PlayerTagListener(this);
-            Config.initConfig(this);
-            Wioska.initWioski(this);
-            wioskiFile = new WioskiFile(this, "wioski.yml");
-            getLogger().log(Level.INFO, "{0} {1} enabled!", new Object[]{pdf.getName(), pdf.getVersion()});
+        PluginDescriptionFile pdf = this.getDescription();
+        //        new PlayerTagListener(this);
+        Config.initConfig(this);
+        Wioska.initWioski(this);
+        wioskiFile = new WioskiFile(this, "wioski.yml");
+        getLogger().log(Level.INFO, "{0} {1} enabled!", new Object[]{pdf.getName(), pdf.getVersion()});
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("wioska")) {
             if (args.length > 0) {
-                /* Komendy gracza */
+                /* KOMENDY GRACZA */
                 if (sender instanceof Player) {
                     Player player = (Player) sender;
                     /* Tworzenie wioski */
@@ -71,32 +75,40 @@ public class WioskiMCSV extends JavaPlugin {
                         }
                         String akronim = args[1];
                         /* Tworzenie zablokowane */
-                        if(!Config.getCreate()) {
+                        if (!Config.getCreate()) {
                             sender.sendMessage(Config.getMessage("createDisabled"));
                             return true;
                         }
                         /* Gracz należy już do wioski */
-                        if(Wioska.playerWioska(player) != null) {                            
-                            sender.sendMessage(Config.getMessage("jestesWiosce"));                            
+                        if (Wioska.getWioska(player) != null) {
+                            sender.sendMessage(Config.getMessage("jestesWiosce"));
                             return true;
                         }
                         /* Istnieje już taka wioska */
-                        if(Wioska.getWioska(akronim) != null) {
-                            sender.sendMessage(Config.getMessage("wioskaIstnieje", akronim)); 
+                        if (Wioska.getWioska(akronim) != null) {
+                            sender.sendMessage(Config.getMessage("wioskaIstnieje", akronim));
                             return true;
                         }
-                        
+
                         /* Czy ma kase */
-                        if(player != null) {
-                            
+                        BigDecimal money = new BigDecimal(0);
+                        BigDecimal fee = new BigDecimal(Config.getCreateFee());
+                        try {
+                            money = Economy.getMoneyExact(player.getName());
+                        } catch (UserDoesNotExistException ex) {
+                            Logger.getLogger(WioskiMCSV.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        
+                        if (money.compareTo(fee) == -1) {
+                            sender.sendMessage(Config.getMessage("notEnoughMoney"));
+                            return true;
+                        }
+
                         /* Czy dobra odległość */
-                        if(!Wioska.czyDobraLokacja(player.getLocation())) {
+                        if (!Wioska.goodPlace(player.getLocation())) {
                             sender.sendMessage(Config.getMessage("zlaLokacja"));
                             return true;
                         }
-                        
+
                         StringBuilder concat = new StringBuilder();
                         for (int i = 2; i < args.length; i++) {
                             concat.append(args[i]);
@@ -105,14 +117,17 @@ public class WioskiMCSV extends JavaPlugin {
                             }
                         }
                         String nazwa = concat.toString();
-                        Wioska.StworzWioske(player, nazwa, akronim);
-                        
-                        /* Stworzenie odpowiedniej grupy w PEX */
-                        /* TODO in v3.0 */
-                        
-                        
-                        /* Stworzenie cuboidu w WG */
-                        
+                        Wioska.stworzWioske(player, nazwa, akronim);
+                        try {
+                            Economy.substract(player.getName(), fee);
+                        } catch (UserDoesNotExistException ex) {
+                            Logger.getLogger(WioskiMCSV.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (NoLoanPermittedException ex) {
+                            Logger.getLogger(WioskiMCSV.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (ArithmeticException ex) {
+                            Logger.getLogger(WioskiMCSV.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
                         return true;
                         /* Dodawanie gracza do wioski */
                     } else if (args[0].equalsIgnoreCase("dodaj")) {
@@ -123,7 +138,6 @@ public class WioskiMCSV extends JavaPlugin {
                             sender.sendMessage(Config.getMessage("tooManyParams"));
                             return false;
                         }
-                        
                         return true;
                         /* Usuwanie gracza z wioski */
                     } else if (args[0].equalsIgnoreCase("usun")) {
@@ -134,7 +148,7 @@ public class WioskiMCSV extends JavaPlugin {
                             sender.sendMessage(Config.getMessage("tooManyParams"));
                             return false;
                         }
-                        
+
                         return true;
                         /* Rozwiązanie wioski */
                     } else if (args[0].equalsIgnoreCase("rozwiaz")) {
@@ -142,7 +156,7 @@ public class WioskiMCSV extends JavaPlugin {
                             sender.sendMessage(Config.getMessage("tooManyParams"));
                             return false;
                         }
-                        
+                        Wioska.delete(player);
                         return true;
                         /* Przedłużanie najmu */
                     } else if (args[0].equalsIgnoreCase("przedluz")) {
@@ -150,7 +164,7 @@ public class WioskiMCSV extends JavaPlugin {
                             sender.sendMessage(Config.getMessage("tooManyParams"));
                             return false;
                         }
-                        
+
                         return true;
                         /* Opuszczenie wioski */
                     } else if (args[0].equalsIgnoreCase("opusc")) {
@@ -158,63 +172,69 @@ public class WioskiMCSV extends JavaPlugin {
                             sender.sendMessage(Config.getMessage("tooManyParams"));
                             return false;
                         }
-                        
-                        return true;
-                        /* Informacje o wioskach */
-                    } else if (args[0].equalsIgnoreCase("info")) {
-                        if (args.length > 2) {
-                            sender.sendMessage(Config.getMessage("tooManyParams"));
-                            return false;
-                        }
-                        
-                        return true;
-                        /* Lista człolnków wioski */
-                    } else if (args[0].equalsIgnoreCase("czlonkowie")) {
-                        if (args.length > 2) {
-                            sender.sendMessage(Config.getMessage("tooManyParams"));
-                            return false;
-                        }
-                        
+                        Wioska.removePlayer(player);
                         return true;
                     } else if (args[0].equalsIgnoreCase("tak")) {
                     } else if (args[0].equalsIgnoreCase("nie")) {
                     }
-                    /* Komendy konsoli */
-                } else {
-                    if (args[0].equalsIgnoreCase("info")) {
-                        if (args.length < 2) {
-                            sender.sendMessage(Config.getMessage("notEnoughParams"));
-                            return false;
-                        } else if (args.length > 2) {
-                            sender.sendMessage(Config.getMessage("tooManyParams"));
-                            return false;
-                        }
-                        
-                        return true;
-                    } else if (args[0].equalsIgnoreCase("czlonkowie")) {
-                        if (args.length < 2) {
-                            sender.sendMessage(Config.getMessage("notEnoughParams"));
-                            return false;
-                        } else if (args.length > 2) {
-                            sender.sendMessage(Config.getMessage("tooManyParams"));
-                            return false;
-                        }
-                        
-                        return true;
-                    } else {
-                        sender.sendMessage(Config.getMessage("onlyPlayer"));
-                        return true;                        
-                    }
                 }
+                /* KOMENDY GRACZA I KONSOLI */
+                /* Lista wiosek */
+                if (args[0].equalsIgnoreCase("lista")) {
+                    if (args.length > 1) {
+                        sender.sendMessage(Config.getMessage("tooManyParams"));
+                        return false;
+                    }
+                    Wioska.lista(sender);
+                    return true;
+                    /* Informacje o wioskach */
+                } else if (args[0].equalsIgnoreCase("info")) {
+                    if (args.length < 2) {
+                        if (sender instanceof Player) {
+                            if(!Wioska.info((Player) sender))
+                                sender.sendMessage(Config.getMessage("nieJestesWiosce"));
+                            return true;
+                        } else {
+                            sender.sendMessage(Config.getMessage("notEnoughParams"));
+                            return false;
+                        }
+                    } else if (args.length > 2) {
+                        sender.sendMessage(Config.getMessage("tooManyParams"));
+                        return false;
+                    }
+                    if(!Wioska.info(sender, args[1]))
+                        sender.sendMessage(Config.getMessage("wioskaNieIstnieje", args[1]));
+                        
+                    return true;
+                    /* Lista człolnków wioski */
+                } else if (args[0].equalsIgnoreCase("czlonkowie")) {
+                    if (args.length < 2) {
+                        if (sender instanceof Player) {
+
+                        } else {
+                            sender.sendMessage(Config.getMessage("notEnoughParams"));
+                            return false;
+                        }
+                    } else if (args.length > 2) {
+                        sender.sendMessage(Config.getMessage("tooManyParams"));
+                        return false;
+                    }
+
+                    return true;
+                }
+//                else {
+//                    sender.sendMessage(Config.getMessage("onlyPlayer"));
+//                    return true;
+//                }
             }
-            /* Lista wiosek */
-        } else if (cmd.getName().equalsIgnoreCase("wioski")) {
-            if (args.length > 0) {
-                sender.sendMessage(Config.getMessage("tooManyParams"));
-                return false;
-            }
-            Wioska.Lista(sender);
-            return true;
+//            /* Lista wiosek */
+//        } else if (cmd.getName().equalsIgnoreCase("wioski")) {
+//            if (args.length > 0) {
+//                sender.sendMessage(Config.getMessage("tooManyParams"));
+//                return false;
+//            }
+//            Wioska.lista(sender);
+//            return true;
         }
         return false;
     }
