@@ -4,15 +4,15 @@ settings:
   create: true
   # czy oglaszac stworzenie wioski, dodawanie i usuwanie czlonkow, rozwiazanie wioski
   broadcast: true
-  # czy dodawac prefix do nazw czlonkow wiosek (true/false)
+  # czy dodawac prefix do nazw czlonkow wiosek (true/false) TODO
   # prefix: true
-  # czy pokazywac prefix wioski w tagu graczy (true/false)
+  # czy pokazywac prefix wioski w tagu graczy (true/false) TODO
   # prefix_tag: true
-  # czy zmieniac kolor tagow graczy (true/false)
+  # czy zmieniac kolor tagow graczy (true/false) TODO
   # tag_color: true
-  # kolor, na jaki beda widoczni gracze z wioski
+  # kolor, na jaki beda widoczni gracze z wioski TODO
   # ally_color: green
-  # kolor, na jaki beda widoczni gracze z innych wiosek
+  # kolor, na jaki beda widoczni gracze z innych wiosek TODO
   # enemy_color: red
   # oplata za zalozenie wioski
   create_fee: 2500
@@ -42,8 +42,8 @@ settings:
   distance_village: 300
   # prefix w nazwach regionow
   prefix: "wioska_"
-  # flagi na regiony wiosek (przyklad: [use: deny, pvp: allow])
-  flags: []
+  # flagi na regiony wiosek (przyklad: [use: deny, pvp: allow]) TODO
+  # flags: []
 
 # wiadomosci
 messages:

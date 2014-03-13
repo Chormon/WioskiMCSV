@@ -18,6 +18,10 @@ package pl.chormon.WioskiMCSV.wioski;
 
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.domains.DefaultDomain;
+import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import java.text.ParseException;
@@ -107,14 +111,26 @@ public class Wioska {
 
         // Message that something really bad has happened and village hasn't been created
     }
-
-    private void createCuboid() throws Exception {
+    
+    private static RegionManager getRegionManager(String world) {
         WorldGuardPlugin wgp = WorldGuard.getWorldGuard(plugin);
         World w = Bukkit.getServer().getWorld(world);
-        RegionManager regionManager = wgp.getRegionManager(w);
+        return wgp.getRegionManager(w);
+    }
+
+    private void createCuboid() throws Exception {
+        RegionManager regionManager = getRegionManager(world);
 
         String prefix = Config.getPrefix();
         ProtectedCuboidRegion pr = new ProtectedCuboidRegion(prefix + akronim, getPos1(), getPos2());
+        DefaultDomain dd = new DefaultDomain();
+        dd.addPlayer(leader);
+        for(String s : members) {
+            dd.addPlayer(s);
+        }
+        pr.setMembers(dd);
+        
+        pr.setFlag(DefaultFlag.USE, State.DENY);
         regionManager.addRegion(pr);
     }
 
@@ -221,6 +237,17 @@ public class Wioska {
         members.add(name);
 
         /* Dodanie gracza do cuboidu i configu */
+        RegionManager regionManager = getRegionManager(world);
+        String prefix = Config.getPrefix();
+        DefaultDomain dd = regionManager.getRegion(prefix + akronim).getMembers();
+        dd.addPlayer(name);
+        regionManager.getRegion(prefix + akronim).setMembers(dd);
+        try {
+            regionManager.save();
+        } catch (ProtectionDatabaseException ex) {
+            Logger.getLogger(Wioska.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         saveWioska();
         return true;
     }
@@ -229,9 +256,20 @@ public class Wioska {
         if (!members.contains(name)) {
             return false;
         }
+        members.remove(name);
 
         /* Usunięcie gracza z cuboidu i configu */
-        members.remove(name);
+        RegionManager regionManager = getRegionManager(world);
+        String prefix = Config.getPrefix();
+        DefaultDomain dd = regionManager.getRegion(prefix + akronim).getMembers();
+        dd.removePlayer(name);
+        regionManager.getRegion(prefix + akronim).setMembers(dd);
+        try {
+            regionManager.save();
+        } catch (ProtectionDatabaseException ex) {
+            Logger.getLogger(Wioska.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         saveWioska();
         return true;
     }
