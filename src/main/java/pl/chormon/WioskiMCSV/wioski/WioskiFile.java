@@ -19,8 +19,6 @@ package pl.chormon.WioskiMCSV.wioski;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -52,10 +50,9 @@ public class WioskiFile {
         }
         this.configFile = new File(plugin.getDataFolder(), fileName);
         this.saveDefaultConfig();
-        this.reloadConfig();
     }
 
-    public void reloadConfig() {
+    private void reloadConfig() {
         fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
 
         // Look for defaults in the jar
@@ -85,10 +82,11 @@ public class WioskiFile {
         }
     }
 
-    public void saveDefaultConfig() {
+    private void saveDefaultConfig() {
         if (!configFile.exists()) {
             this.plugin.saveResource(fileName, false);
         }
+        this.reloadConfig();
     }
     
     public void addWioska(Wioska wioska) {
@@ -99,16 +97,6 @@ public class WioskiFile {
         this.fileConfiguration.set(section+".czlonkowie", wioska.getMembers().toArray());
         this.fileConfiguration.createSection(section+".lokacja");
         this.fileConfiguration.set(section+".lokacja.world", wioska.getWorld());
-//        List<Integer> pos1 = new ArrayList<>();
-//        pos1.add(wioska.getPos1().getBlockX());
-//        pos1.add(wioska.getPos1().getBlockY());
-//        pos1.add(wioska.getPos1().getBlockZ());
-//        plugin.getLogger().log(Level.INFO, "Pos1: {0} {1} {2}", new Object[]{wioska.getPos1().getBlockX(), wioska.getPos1().getBlockY(), wioska.getPos1().getBlockZ()});
-//        List<Integer> pos2 = new ArrayList<>();
-//        pos2.add(wioska.getPos2().getBlockX());
-//        pos2.add(wioska.getPos2().getBlockY());
-//        pos2.add(wioska.getPos2().getBlockZ());
-//        plugin.getLogger().log(Level.INFO, "Pos2: {0} {1} {2}", new Object[]{wioska.getPos2().getBlockX(), wioska.getPos2().getBlockY(), wioska.getPos2().getBlockZ()});
         this.fileConfiguration.set(section+".lokacja.pos1", new Object[]{wioska.getPos1().getBlockX(), wioska.getPos1().getBlockY(), wioska.getPos1().getBlockZ()});
         this.fileConfiguration.set(section+".lokacja.pos2", new Object[]{wioska.getPos2().getBlockX(), wioska.getPos2().getBlockY(), wioska.getPos2().getBlockZ()});
         this.fileConfiguration.set(section+".zalozono", wioska.getEstimated());

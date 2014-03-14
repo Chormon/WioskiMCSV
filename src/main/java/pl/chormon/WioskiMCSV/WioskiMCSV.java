@@ -30,6 +30,8 @@ import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 import java.math.BigDecimal;
 import java.util.logging.Logger;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitScheduler;
 
 /**
  *
@@ -58,6 +60,15 @@ public class WioskiMCSV extends JavaPlugin {
         Wioska.initWioski(this);
         wioskiFile = new WioskiFile(this, "wioski.yml");
         getLogger().log(Level.INFO, "{0} {1} enabled!", new Object[]{pdf.getName(), pdf.getVersion()});
+        
+        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+        scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                getLogger().log(Level.INFO, "Sprawdzam waznosc wiosek!");
+                Wioska.checkExpireTime();
+            }
+        }, 0L, 72000L);
     }
 
     @Override

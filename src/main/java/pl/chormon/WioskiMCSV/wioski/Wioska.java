@@ -98,7 +98,6 @@ public class Wioska {
             wioska.createCuboid();
             wioskiFile.addWioska(wioska);
             wioskiFile.saveConfig();
-            wioskiFile.reloadConfig();
             if (Config.getBroadcast()) {
                 Bukkit.getServer().broadcastMessage(Config.getMessage("stworzonoWioske", player.getName(), nazwa, akronim));
             } else {
@@ -132,6 +131,25 @@ public class Wioska {
         
         pr.setFlag(DefaultFlag.USE, State.DENY);
         regionManager.addRegion(pr);
+    }
+    
+    public static void checkExpireTime() {
+        WioskiFile wioskiFile = plugin.getWioskiFile();
+        ConfigurationSection cs = wioskiFile.getConfig().getConfigurationSection("wioski");
+        Set<String> wioski = cs.getKeys(false);
+        for (String s : wioski) {
+                SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                Date exp = null;
+                Date now = new Date(System.currentTimeMillis());
+                try {
+                    exp = sdt.parse(cs.getString(s + ".do"));
+                } catch (ParseException ex) {
+                    Logger.getLogger(Wioska.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if(exp.before(now)) {
+                    delete(s);
+                }
+            }
     }
 
     public static void lista(CommandSender sender) {
@@ -317,17 +335,15 @@ public class Wioska {
 
         for (String s : wioski) {
             if (s.toLowerCase().equals(akronim.toLowerCase())) {
-                FileConfiguration wioskaConfig = wioskiFile.getConfig();
-                String path = "wioski." + s + ".";
-                Wioska w = new Wioska(wioskaConfig.getString(path + "nazwa"), s);
+                Wioska w = new Wioska(cs.getString(s + ".nazwa"), s);
 
-                w.setLeader(wioskaConfig.getString(path + "przywodca"));
-                w.setMembers(wioskaConfig.getStringList(path + "czlonkowie"));
+                w.setLeader(cs.getString(s + ".przywodca"));
+                w.setMembers(cs.getStringList(s + ".czlonkowie"));
 
                 SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 Date est = null;
                 try {
-                    est = sdt.parse(wioskaConfig.getString(path + "zalozono"));
+                    est = sdt.parse(cs.getString(s + ".zalozono"));
                 } catch (ParseException ex) {
                     Logger.getLogger(Wioska.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -335,22 +351,34 @@ public class Wioska {
 
                 Date exp = null;
                 try {
-                    exp = sdt.parse(wioskaConfig.getString(path + "do"));
+                    exp = sdt.parse(cs.getString(s + ".do"));
                 } catch (ParseException ex) {
                     Logger.getLogger(Wioska.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 w.setExpired(exp);
-                List<Integer> pt1 = wioskaConfig.getIntegerList(path + "lokacja.pos1");
-                List<Integer> pt2 = wioskaConfig.getIntegerList(path + "lokacja.pos2");
+                List<Integer> pt1 = cs.getIntegerList(s + ".lokacja.pos1");
+                List<Integer> pt2 = cs.getIntegerList(s + ".lokacja.pos2");
                 w.setPos1(pt1.get(0), pt1.get(1), pt1.get(2));
                 w.setPos2(pt2.get(0), pt2.get(1), pt2.get(2));
-                w.setWorld(wioskaConfig.getString(path + "lokacja.world"));
+                w.setWorld(cs.getString(s + ".lokacja.world"));
 
                 return w;
             }
         }
 
         return null;
+    }
+    
+    private static void delete(String akronim) {
+        WioskiFile wioskiFile = plugin.getWioskiFile();
+        Wioska w = getWioska(akronim);
+        if (w != null) {
+                w.delete();
+                if (Config.getBroadcast()) {
+                    Bukkit.getServer().broadcastMessage(Config.getMessage("rozwiazanoWioske", w.getAkronim(), w.getNazwa()));
+                }
+                plugin.getLogger().log(Level.INFO, Config.getMessage("rozwiazanoWioske", w.getAkronim(), w.getNazwa()));
+        }
     }
 
     public static void delete(Player player) {

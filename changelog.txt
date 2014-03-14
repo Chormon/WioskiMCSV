@@ -1,17 +1,19 @@
-WioskiMCSV v1.0:
-- zak³adanie cuboida (zwanego dalej wiosk¹);
-- dodawanie oraz usuwanie przez twórcê cuboida (zwanego dalej za³o¿ycielem) graczy do wioski;
-- usuwanie wioski przez za³o¿yciela;
-- mo¿liwoœæ odejœcia gracza z wioski;
-- wyœwietlanie listy wiosek;
-- wyœwietlanie informacji o wiosce;
-- wyœwietlanie listy cz³onów wioski;
-- mo¿liwoœæ ustawienia maksymalnej iloœci osób w cuboidziel
-- mo¿liwoœæ ustawienia rozmiarów (wysokoœæ, szerokoœæ, d³ugoœæ) tworzonych wiosek;
-- mo¿liwoœæ ustawienia kwoty za³o¿enia oraz przed³u¿onia czasu wa¿noœci wioski;
-- mo¿liwoœæ ustawienia czasu przed³u¿enia wioski (po up³yniêciu terminu wioska zostaje automatycznie usuniêta);
-- mo¿liwoœæ ustawienia œwiatów, na których mo¿na zak³adaæ wioski;
-- mo¿liwoœæ ustawienia miejsc i odleg³oœci od nich, na których wioski nie mog¹ byæ tworzone;
-- mo¿liwoœæ ustawienia minimalnego dystansu pomiêdzy wioskami;
-- mo¿liwoœæ ustawienia flag, jakie maj¹ byæ dodawane do cuboidu podczas jego tworzenia;
-- mo¿liwoœæ ustawienia prefixu do nazw tworzonych regionów;
+ï»¿WioskiMCSV v1.0:
+- zakÅ‚adanie cuboida (zwanego dalej wioskÄ…);
+- dodawanie oraz usuwanie przez twÃ³rcÄ™ cuboida (zwanego dalej zaÅ‚oÅ¼ycielem) graczy do/z wioski;
+- usuwanie wioski przez zaÅ‚oÅ¼yciela;
+- moÅ¼liwoÅ›Ä‡ odejÅ›cia gracza z wioski;
+- wyÅ›wietlanie listy wiosek;
+- wyÅ›wietlanie informacji o wiosce;
+- wyÅ›wietlanie listy czÅ‚onÃ³w wioski;
+- moÅ¼liwoÅ›Ä‡ ustawienia maksymalnej iloÅ›ci osÃ³b w cuboidziel
+- moÅ¼liwoÅ›Ä‡ ustawienia rozmiarÃ³w (wysokoÅ›Ä‡, szerokoÅ›Ä‡, dÅ‚ugoÅ›Ä‡) tworzonych wiosek;
+- moÅ¼liwoÅ›Ä‡ ustawienia kwoty zaÅ‚oÅ¼enia oraz przedÅ‚uÅ¼onia czasu waÅ¼noÅ›ci wioski;
+- moÅ¼liwoÅ›Ä‡ ustawienia czasu przedÅ‚uÅ¼enia wioski (po upÅ‚yniÄ™ciu terminu wioska zostaje automatycznie usuniÄ™ta);
+- moÅ¼liwoÅ›Ä‡ ustawienia Å›wiatÃ³w, na ktÃ³rych moÅ¼na zakÅ‚adaÄ‡ wioski;
+- moÅ¼liwoÅ›Ä‡ ustawienia miejsc i odlegÅ‚oÅ›ci od nich, na ktÃ³rych wioski nie mogÄ… byÄ‡ tworzone;
+- moÅ¼liwoÅ›Ä‡ ustawienia minimalnego dystansu pomiÄ™dzy wioskami;
+- moÅ¼liwoÅ›Ä‡ ustawienia prefixu do nazw tworzonych regionÃ³w;
+- moÅ¼liwoÅ›Ä‡ dodawania i usuwania graczy do/z kaÅ¼dej wioski przez uprawnionÄ… osobÄ™;
+- moÅ¼liwoÅ›Ä‡ rozwiÄ…zania wioski przez uprawnionÄ… osobÄ™;
+- moÅ¼liwoÅ›Ä‡ rÄ™cznego ustawienia daty waÅ¼noÅ›ci wioski przez uprawnionÄ… osobÄ™;
